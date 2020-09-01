@@ -1,5 +1,5 @@
 body{
-    background-color: #fdbdcc;
+    background-color: #ffb7aa;
 }
 
 .registration-form{
@@ -7,7 +7,7 @@ body{
 }
 
 .registration-form form{
-    background-color: #fff;
+    background-color: #fae0db;
     max-width: 600px;
     margin: auto;
     padding: 50px 70px;
@@ -17,10 +17,10 @@ body{
 
 .registration-form .form-icon{
 	text-align: center;
-    background-color: #5891ff;
+    background-color: #ffb7aa;
     border-radius: 50%;
     font-size: 40px;
-    color: white;
+    color: #ffb7aa;
     width: 100px;
     height: 100px;
     margin: auto;

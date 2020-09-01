@@ -1,7 +1,37 @@
 <?php
     session_start();
+    require_once("config.php");
     if (!isset($_SESSION['userAcc'])) {
         header ("Location: index.php");
+    }
+    $userName = $_SESSION['userName'];
+    $userId = $_SESSION['userId'];
+    $userAcc = $_SESSION['userAcc'];
+    $capital = $_SESSION['capital'];
+    $depositAcc = $_POST['userAccount'];
+    if (isset($_POST['okButton'])) {
+        $userAccSql = <<<ua
+            SELECT userAcc, userId
+            FROM `users`
+            WHERE userAcc = '$depositAcc'
+        ua;
+        $userAccResult = mysqli_query($link, $userAccSql);
+        $userAccRow = mysqli_fetch_assoc($userAccResult);
+        $userCapitalId = $userAccRow['userId'];
+        if ($userAccRow) {
+            $capitalSql = <<<cs
+                SELECT * 
+                FROM `accounts`
+                WHERE userId = '$userCapitalId'
+            cs;
+            $capitalResult = mysqli_query($link, $capitalSql);
+            $capitalRow = mysqli_fetch_assoc($capitalResult);
+            $findCapital = $capitalRow['capital'];
+            
+        }
+        else {
+            $mss = "帳號" . $depositAcc . "不存在或輸入錯誤!";            
+        }
     }
 ?>
 
@@ -24,43 +54,28 @@
     <div class="registration-form">
         <form method="POST" action="">
             <div class="form-group row">
-                <label for="productName" class="col-4 col-form-label">商品名稱：</label>
+                <label for="userAccount" class="col-4 col-form-label">存款帳號：</label>
                 <div class="col-8">
-                    <input id="productName" name="productName" type="text" class="form-control item" value="<?= $productRow['productName']?>" required="required">
+                    <input id="userAccount" name="userAccount" type="text" class="form-control item" value="<?= $userAcc?>" required="required">
+                    <span><?= $mss?></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="categoryName" class="col-4 col-form-label">商品類別：</label>
+                <label class="col-4 col-form-label">現有帳號金額：</label>
                 <div class="col-8">
-                    <select id="categoryName" name="categoryName" required="required" class="custom-select option">
-                        <?php while($row = mysqli_fetch_assoc($result)) {?>
-                            <option value="<?= $row['categoryId']?>" <?= ($row['categoryId']==$cidSelect) ? "selected" : "" ?> ><?= $row['categoryName']?></option>
-                        <?php } ?>
-                    </select>
+                <input id="nowCapital" name="nowCapital" type="number" min="10" max="100000" class="form-control item" value="<?= $capital?>" readonly="readonly">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="price" class="col-4 col-form-label">商品價格：</label>
+                <label for="depositNum" class="col-4 col-form-label">存款金額(NTD)：</label>
                 <div class="col-8">
-                    <input id="price" name="price" type="text" class="form-control item" value="<?= $productRow['price']?>" required="required">
+                    <input id="depositNum" name="depositNum" type="number" min="10" max="100000" class="form-control item" value="<?= $productRow['productName']?>" required="required">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="stock" class="col-4 col-form-label">商品庫存：</label>
+                <label for="description" class="col-4 col-form-label">敘述：</label>
                 <div class="col-8">
-                    <input id="stock" name="stock" type="text" class="form-control item" value="<?= $productRow['stock']?>" required="required">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="productImg" class="col-4 col-form-label">商品圖片名稱：</label>
-                <div class="col-8">
-                    <input id="productImg" name="productImg" type="text" class="form-control item" value="<?= $productRow['productImg']?>" required="required">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="description" class="col-4 col-form-label">商品描述：</label>
-                <div class="col-8">
-                    <textarea id="description" name="description" cols="40" rows="5" class="form-control item"><?= $productRow['description']?></textarea>
+                    <textarea id="description" name="description" cols="20" rows="3" class="form-control item"><?= $productRow['description']?></textarea>
                 </div>
             </div>
             <div class="form-group row">
