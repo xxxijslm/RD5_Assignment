@@ -124,7 +124,7 @@
                 <h1>登入</h1>
                 <input type="text" id="loginUserAcc" name ="loginUserAcc" placeholder="帳號" required/>
                 <input type="password" id="loginPassword" name ="loginPassword" placeholder="密碼" required/>
-                <!-- <a href="#">Forgot your password?</a> -->
+                <a href="secret.php">已經登入？進入個人網銀頁面</a>
                 <button id="signInButton" name="signInButton">Sign In</button>
             </form>
         </div>
