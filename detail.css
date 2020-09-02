@@ -2,9 +2,31 @@ html *{
     -webkit-font-smoothing: antialiased;
     
 }
-body{
-    background: #fff !important;
+
+:root {
+    --background: #ffb7aa;
+    --background-accent: #ff856f;
+    --background-accent-2: #FF4B2B;
+    --light: #ff856f;
+    --dark: #FF4B2B;
+    --text: #ffffff;
+  }
+  
+body {
+    background-color: var(--background);
+    background-image: linear-gradient(
+      var(--background-accent-2) 50%,
+      var(--background-accent) 50%
+    ), linear-gradient(
+      var(--background-accent) 50%,
+      var(--background-accent-2) 50%
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 30px;
+    background-position: top left, bottom left;
+    min-height: 98vh;
 }
+
 a {
     color: #3e3947 !important;
     text-decoration: none;
@@ -487,4 +509,13 @@ footer p a:hover{
   border-radius: 3px;
   box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
   color: #555 !important;
+}
+
+.title {
+    position: absolute;
+    margin-top: 50px;
+}
+
+.tables {
+    margin-top: 150px;
 }

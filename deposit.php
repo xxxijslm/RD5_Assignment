@@ -8,29 +8,35 @@
     $userId = $_SESSION['userId'];
     $userAcc = $_SESSION['userAcc'];
     $capital = $_SESSION['capital'];
-    $depositAcc = $_POST['userAccount'];
+    $money = $_POST['depositNum'];
+    $description = $_POST['description'];
     if (isset($_POST['okButton'])) {
-        $userAccSql = <<<ua
-            SELECT userAcc, userId
-            FROM `users`
-            WHERE userAcc = '$depositAcc'
-        ua;
-        $userAccResult = mysqli_query($link, $userAccSql);
-        $userAccRow = mysqli_fetch_assoc($userAccResult);
-        $userCapitalId = $userAccRow['userId'];
-        if ($userAccRow) {
-            $capitalSql = <<<cs
-                SELECT * 
-                FROM `accounts`
-                WHERE userId = '$userCapitalId'
-            cs;
-            $capitalResult = mysqli_query($link, $capitalSql);
-            $capitalRow = mysqli_fetch_assoc($capitalResult);
-            $findCapital = $capitalRow['capital'];
-            
+        $findCapitalSql = <<<fc
+            SELECT capital 
+            FROM `accounts`
+            WHERE userId = $userId;
+        fc;
+        $findCapitalResult = mysqli_query($link, $findCapitalSql);
+        $findCapitalRow = mysqli_fetch_assoc($findCapitalResult);
+        $findCapital = $findCapitalRow['capital'];
+        if (10 <= $money && $money <= 100000) {
+            $findCapital += $money;
+            $updateCapitalSql = <<<uc
+                UPDATE accounts SET capital = $findCapital WHERE userId = $userId
+            uc;
+            mysqli_query($link, $updateCapitalSql);
+            $insertTransSql = <<< it
+                INSERT INTO transactions
+                (type, userId, money, date, description, balance)
+                VALUES
+                (0, $userId, $money, current_timestamp(), '$description', $findCapital)
+            it;
+            mysqli_query($link, $insertTransSql);
+            echo "<script>alert('提示：存款成功！'); location.href = 'secret.php';</script>";
+            $_SESSION['capital'] = $findCapital;
         }
         else {
-            $mss = "帳號" . $depositAcc . "不存在或輸入錯誤!";            
+            echo "<script>alert('警告：輸入金額必須介於NTD 10-100000');</script>";
         }
     }
 ?>
@@ -56,14 +62,14 @@
             <div class="form-group row">
                 <label for="userAccount" class="col-4 col-form-label">存款帳號：</label>
                 <div class="col-8">
-                    <input id="userAccount" name="userAccount" type="text" class="form-control item" value="<?= $depositAcc ?>" required="required">
+                    <input id="userAccount" name="userAccount" type="text" class="form-control item" value="<?= $userAcc ?> " required="required" readonly="readonly">
                     <span><?= $mss?></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-4 col-form-label">現有帳號金額：</label>
+                <label class="col-4 col-form-label">現有帳號金額(NTD)：</label>
                 <div class="col-8">
-                <input id="nowCapital" name="nowCapital" type="number" min="10" max="100000" class="form-control item" value="<?= $capital?>" readonly="readonly">
+                <input id="nowCapital" name="nowCapital" type="number" class="form-control item" value="<?= $capital?>" required="required" readonly="readonly">
                 </div>
             </div>
             <div class="form-group row">
@@ -87,5 +93,4 @@
         </form>
     </div>
 </body>
-
 </html>
