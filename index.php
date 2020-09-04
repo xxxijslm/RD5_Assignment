@@ -91,6 +91,7 @@
         unset($_SESSION['userId']);
         unset($_SESSION['userAcc']);
         unset($_SESSION['capital']);
+        header("Location: index.php");
     }
 ?>
 
